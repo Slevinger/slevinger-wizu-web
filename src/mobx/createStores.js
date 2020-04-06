@@ -12,7 +12,6 @@ export const createStores = props => {
   const mediaStore = new MediaStore();
   const statsStore = new StatsStore();
   const navigationStore = new NavigationStore();
-  // debugger;
   const modalStore = new ModalStore(statsStore);
   const apiStore = new ApiStore(modalStore, statsStore);
   const authStore = new AuthStore(apiStore, statsStore, navigationStore);

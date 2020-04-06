@@ -25,9 +25,7 @@ export class MediaStore extends AutoBinder {
   }
 
   setMediaSource(uri) {
-    this.mediaSource = uri
-      ? { uri: uri.replace("?alt=media", "") + "?alt=media" }
-      : EmptyElement;
+    this.mediaSource = uri || EmptyElement;
     // navigate("mediaScreen");
   }
 }

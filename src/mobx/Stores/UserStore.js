@@ -2,10 +2,11 @@ import { AutoBinder } from "../../utils/AutoBinder";
 import { decorate, observable, action } from "mobx";
 import {
   updateProfileImageApi,
-  updateUserApi,
+  updateUserCoverPhotoApi,
   replayApi
 } from "../api/userApis";
 import { getUserDetailsApi } from "../api/feedApi";
+import { createFormData } from "../../utils";
 
 // import * as Keychain from "react-native-keychain";
 
@@ -52,14 +53,28 @@ export class UserStore extends AutoBinder {
     }
   }
 
-  async updateProfileImage(_id, data) {
+  async updateProfileImage(file) {
     try {
-      this.authStore.user.image_url = "http:\\www";
-
-      const api = updateProfileImageApi({ data });
+      const api = updateProfileImageApi({ data: createFormData(file) });
       const answer = await this.apiStore.callApi(api);
       if (this.authStore.user) {
         this.authStore.user.profileImage = answer;
+      }
+      // await this.getEvents();
+      return answer;
+      // this.events.find(({ _id }) => _id === event_id).image_url = answer;
+
+      // const credentials = await Keychain.getGenericPassword();
+    } catch (err) {
+      console.log("error", err);
+    }
+  }
+  async setCoverPhoto(file) {
+    try {
+      const api = updateUserCoverPhotoApi({ data: createFormData(file) });
+      const answer = await this.apiStore.callApi(api);
+      if (this.authStore.user) {
+        this.authStore.user.coverPhoto = answer;
       }
       // await this.getEvents();
       return answer;

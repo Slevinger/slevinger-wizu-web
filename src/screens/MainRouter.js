@@ -1,27 +1,30 @@
 import React, { useMemo } from "react";
 import LandingPage from "./LandingPage";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
 import PrivateRoute from "../components/utils/PrivateRoute";
 import AuthScreen from "./AuthScreen";
 import { mobxConnect } from "../mobx/mobxConnect";
 
-const MainRouter = ({ currentPath }) => {
+const MainRouter = ({ history, user }) => {
+  console.log(user);
   return (
-    <Router>
+    <Router history={history}>
       <Switch>
-        <Route path="/auth">
-          <AuthScreen />
-        </Route>
-        <PrivateRoute path="/">
+        <Route path="/auth" component={AuthScreen} />
+        <PrivateRoute path="/home">
           <LandingPage />
         </PrivateRoute>
+        <Redirect from="/" to="/home" />
       </Switch>
     </Router>
   );
 };
 
-export default mobxConnect(({ navigationStore: { currentPath } }) => {
-  return {
-    currentPath
-  };
-})(MainRouter);
+export default mobxConnect(
+  ({ navigationStore: { history }, authStore: { user } }) => {
+    return {
+      history,
+      user
+    };
+  }
+)(MainRouter);

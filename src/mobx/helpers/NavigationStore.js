@@ -1,15 +1,14 @@
 import { decorate, observable, action, computed } from "mobx";
 import { AutoBinder } from "../../utils/AutoBinder";
 import { createBrowserHistory } from "history";
+const history = createBrowserHistory();
 
 export class NavigationStore extends AutoBinder {
   history;
 
   constructor() {
     super();
-    this.history = createBrowserHistory();
-    // debugger;
-    // this.history = useHistory();
+    this.history = history;
   }
 
   push(path) {
@@ -20,18 +19,16 @@ export class NavigationStore extends AutoBinder {
   }
 
   get currentPath() {
-    debugger;
-
     return this.history.location.pathname;
   }
 
   replace(path) {
-    debugger;
     this.history.replace(path);
   }
 }
 
 decorate(NavigationStore, {
+  history: observable,
   currentPath: computed,
   navigate: action,
   push: action,

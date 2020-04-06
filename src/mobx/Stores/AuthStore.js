@@ -30,6 +30,7 @@ export class AuthStore extends AutoBinder {
 
   reset() {
     this.user = null;
+    this._token = null;
   }
 
   async login({ username, password }) {
@@ -38,7 +39,7 @@ export class AuthStore extends AutoBinder {
       const response = await this.apiStore.callApi(
         loginApi({ username, password })
       );
-      debugger;
+
       if (response) {
         const { token, user } = response;
         if (token) {
@@ -64,7 +65,7 @@ export class AuthStore extends AutoBinder {
       );
       if (response) {
         const { token, user } = response;
-        debugger;
+
         if (token) {
           this._token = token;
           localStorage.setItem("token", token);
@@ -84,15 +85,11 @@ export class AuthStore extends AutoBinder {
     console.log("token", token);
     this._token = token;
     if (!token) {
-      // fetch me using the token
-      //navigate("loginFlow");
-      // set user to me
+      this.navigationStore.push("/auth/signup");
     } else {
       await this.fetchUser();
-      if (!this.user) {
-        // navigate("loginFlow");
-      } else {
-        // navigate("mainFlow");
+      if (this.user) {
+        this.navigationStore.push("/home/profile");
       }
     }
   }
@@ -108,7 +105,7 @@ export class AuthStore extends AutoBinder {
 
   async logout() {
     localStorage.removeItem("token");
-    this._token = null;
+    this.reset();
     // Keychain.resetGenericPassword();
   }
 }
@@ -120,5 +117,6 @@ decorate(AuthStore, {
   login: action,
   signup: action,
   reset: action,
-  fetchUser: action
+  fetchUser: action,
+  tryLocalSignin: action
 });

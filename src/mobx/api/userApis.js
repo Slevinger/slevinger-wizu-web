@@ -51,6 +51,17 @@ export const updateProfileImageApi = ({ data }) => {
     }
   };
 };
+export const updateUserCoverPhotoApi = ({ data }) => {
+  return {
+    method: "post",
+    url: `/users/me/cover-photo`,
+    body: data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      mimeType: "multipart/form-data"
+    }
+  };
+};
 
 export const replayApi = (user_id, answer) => ({
   method: "patch",

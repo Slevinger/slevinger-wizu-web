@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { TextField } from "../components/StyledComponents";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import { mobxConnect } from "../mobx/mobxConnect";
-import { useHistory, NavLink } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
+// import NavLink from "../components/utils/NavLink";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,25 +30,21 @@ const AuthLink = ({ isSignUp, ...rest }) => {
 
 const AuthForm = ({ login, signup }) => {
   const classes = useStyles();
-  const history = useHistory();
-  const [state, setState] = useState({});
+  const location = useLocation();
 
   const isSignUp =
-    history.location.pathname
+    location.pathname
       .split("/")
-      [history.location.pathname.split("/").length - 1].toLowerCase() ===
-    "signup";
+      [location.pathname.split("/").length - 1].toLowerCase() === "signup";
 
   const handleSubmit = useCallback(
     async event => {
       event.preventDefault();
-      // debugger;
       const form = event.target.closest("form");
       const formData = new FormData(form);
       const data = {};
       for (let name of formData.keys()) {
         // const input = form.elements[name];
-        // debugger;
         data[name] = formData.get(name);
       }
       if (isSignUp) {
@@ -67,7 +64,7 @@ const AuthForm = ({ login, signup }) => {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        backgroundColor: "rgba(0,200,100,0.2)"
+        backgroundColor: "white"
       }}
     >
       <form
@@ -99,6 +96,7 @@ const AuthForm = ({ login, signup }) => {
           id="outlined-basic"
           name="username"
           label="Username"
+          value="slevinger"
           variant="outlined"
         />
         <TextField
@@ -106,6 +104,7 @@ const AuthForm = ({ login, signup }) => {
           type="password"
           name="password"
           id="outlined-basic"
+          value="123456"
           label="Password"
           variant="outlined"
         />
@@ -123,7 +122,12 @@ const AuthForm = ({ login, signup }) => {
   );
 };
 
-export default mobxConnect(({ authStore: { login, signup } }) => ({
-  login,
-  signup
-}))(AuthForm);
+export default mobxConnect(
+  ({ authStore: { login, signup }, navigationStore: { currentPath } }) => {
+    return {
+      login,
+      signup,
+      currentPath
+    };
+  }
+)(AuthForm);
