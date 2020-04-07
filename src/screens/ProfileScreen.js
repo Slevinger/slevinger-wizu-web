@@ -1,36 +1,50 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { mobxConnect } from "../mobx/mobxConnect";
-import { Button } from "@material-ui/core";
-import { Page } from "../components/StyledComponents";
-import Lightbox from "react-image-lightbox";
+import { Page, Spacer } from "../components/StyledComponents";
 import EmptyImage from "../assets/empty-image.png";
 import styled from "styled-components";
-import { FaCamera } from "react-icons/fa";
-import { buildFileSelector } from "../utils";
+import ProfileImageHeader from "../components/ProfileImageHeader";
+import EditImageButton from "../components/EditImageButton";
+import { LogoutButton } from "../components/StyledComponents";
+import FriendsComponent from "../components/FriendsCompoent";
+import { useLocation } from "react-router-dom";
+import moment from "moment";
+
 import "react-image-lightbox/style.css";
 
-const Attribute = ({ label, value }) => (
-  <div style={{ flexDirection: "column", marginLeft: "25px" }}>
-    <text style={{ marginRight: "15px", color: "gray" }}>{`${label}:`}</text>
-    <text style={{ fontSize: 32, fontWeight: "bolder" }}>{value}</text>
-  </div>
-);
-
-const TopImageContainer = styled.div`
-  position: relative;
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-`;
-const TopImage = styled.img`
-  object-fit: cover;
-  width: 100%;
-  height: 400px;
-  background-color: #f7f7f7;
-  &:hover {
-    cursor: pointer;
+const formatPhoneNumber = phoneNumberString => {
+  var cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+  var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    return "(" + match[1] + ") " + match[2] + "-" + match[3];
   }
-`;
+  return null;
+};
+const parsers = {
+  phoneNumber: formatPhoneNumber,
+  date: dateString => moment(dateString).format("dd, MMM, YYYY"),
+  string: string => string
+};
+const getByPattern = (value, type = "string") => {
+  return parsers[type](value);
+};
+const Attribute = ({ label, value, type, style }) => {
+  return (
+    <div
+      style={{
+        ...style,
+        flexDirection: "column",
+        marginLeft: "25px",
+        marginRight: "25px"
+      }}
+    >
+      <text style={{ marginRight: "15px", color: "gray" }}>{`${label}:`}</text>
+      <text style={{ fontSize: 42, fontWeight: "bolder" }}>
+        {getByPattern(value, type)}
+      </text>
+    </div>
+  );
+};
 
 const ProfileImageContainer = styled.div`
   width: 260px;
@@ -51,107 +65,35 @@ const ProfileImage = styled.img`
     cursor: pointer;
   }
 `;
-const StyledIconButton = styled.div`
-  background-color: gainsboro;
-  border-radius: 12px;
-  padding: 6px;
-  &:hover {
-    pointer: cursor;
-    background-color: gray;
-  }
-`;
-const EditImageButton = ({ fileSelected, left, bottom }) => {
-  const selector = buildFileSelector(fileSelected);
-
-  return (
-    <StyledIconButton
-      style={{ position: "absolute", left, bottom }}
-      onClick={e => {
-        selector.click();
-      }}
-    >
-      <FaCamera size={32} />
-    </StyledIconButton>
-  );
-};
-
-const ImageHeader = ({
-  profileImage,
-  coverPhoto,
-  updateProfileImage,
-  setCoverPhoto,
-  mediaSource,
-  setMediaSource,
-  hideMedia,
-  ...rest
-}) => {
-  // const [isOpen,setIsOpen] = useState(false);
-
-  return (
-    <>
-      {mediaSource && (
-        <Lightbox
-          mainSrc={mediaSource ? mediaSource + "?alt=media" : EmptyImage}
-          onCloseRequest={() => {
-            hideMedia();
-          }}
-        />
-      )}
-      <TopImageContainer>
-        <TopImage
-          {...rest}
-          onClick={() => setMediaSource(coverPhoto)}
-          src={coverPhoto ? coverPhoto + "?alt=media" : EmptyImage}
-        />
-
-        <EditImageButton
-          left={"90%"}
-          bottom={"13%"}
-          fileSelected={file => {
-            debugger;
-            setCoverPhoto(file);
-          }}
-        />
-      </TopImageContainer>
-    </>
-  );
-};
-
-const LogoutButton = styled(Button)`
-  justify-self: center;
-  align-self: center;
-  position: relative;
-  bottom: 35px;
-`;
-
-const ProfileImageHeader = mobxConnect(
-  ({
-    authStore: {
-      user: { profileImage, coverPhoto }
-    },
-    userStore: { setCoverPhoto, updateProfileImage },
-    mediaStore: { mediaSource, setMediaSource, hideMedia }
-  }) => ({
-    profileImage,
-    coverPhoto,
-    setCoverPhoto,
-    updateProfileImage,
-    mediaSource,
-    setMediaSource,
-    hideMedia
-  })
-)(ImageHeader);
 
 const ProfileScreen = ({
+  user_id,
   user,
   setMediaSource,
   updateProfileImage,
-  logout
+  logout,
+  getUserDetails
 }) => {
-  const { profileImage, username } = user;
+  const [displayUser, setDisplayUser] = useState(user);
+
+  const { profileImage, username, phone, email, friends } = displayUser;
+
+  useEffect(() => {
+    const getOtherUser = async () => {
+      const otherUser = await getUserDetails(user_id);
+      setDisplayUser(otherUser);
+    };
+    if (user_id && user_id !== displayUser._id.toString()) {
+      getOtherUser();
+    }
+    return () => {
+      setDisplayUser(user);
+    };
+  }, [user_id]);
+
   return (
     <>
-      <ProfileImageHeader />
+      <ProfileImageHeader hideEdit={user_id} user={displayUser} />
 
       <Page>
         <ProfileImageContainer>
@@ -159,18 +101,32 @@ const ProfileScreen = ({
             onClick={() => setMediaSource(profileImage)}
             src={profileImage ? profileImage + "?alt=media" : EmptyImage}
           />
-          <EditImageButton
-            left={"67%"}
-            bottom={"14%"}
-            fileSelected={file => {
-              debugger;
-              updateProfileImage(file);
-            }}
-          />
+          {!user_id && (
+            <EditImageButton
+              left={"67%"}
+              bottom={"14%"}
+              fileSelected={file => {
+                updateProfileImage(file);
+              }}
+            />
+          )}
         </ProfileImageContainer>
-        <div style={{ flexDirection: "row", display: "flex", flex: 1 }}>
-          <Attribute label={"username"} value={username} />
+        <div style={{ flexDirection: "column", display: "flex" }}>
+          <Attribute label={"USERNAME"} value={username} />
+          <Spacer />
+          <div style={{ flexDirection: "row", display: "flex" }}>
+            <Attribute
+              label={"PHONE-NO"}
+              value={phone}
+              type={"phoneNumber"}
+              style={{ flex: 1 }}
+            />
+
+            <Attribute label={"E-Mail"} value={email} />
+          </div>
         </div>
+        <FriendsComponent listOfFriends={friends} />
+        <Spacer flex={1} />
         <LogoutButton variant="outlined" color="primary" onClick={logout}>
           logout
         </LogoutButton>
@@ -182,12 +138,20 @@ const ProfileScreen = ({
 export default mobxConnect(
   ({
     authStore: { user, logout },
-    userStore: { updateProfileImage },
+    userStore: { updateProfileImage, getUserDetails },
     mediaStore: { setMediaSource }
-  }) => ({
-    user,
-    logout,
-    updateProfileImage,
-    setMediaSource
-  })
+  }) => {
+    const location = useLocation();
+    const match = location.search.match(/\?user_id=([^&]+)&?/);
+
+    debugger;
+    return {
+      getUserDetails,
+      user,
+      logout,
+      updateProfileImage,
+      setMediaSource,
+      user_id: match && match[1]
+    };
+  }
 )(ProfileScreen);

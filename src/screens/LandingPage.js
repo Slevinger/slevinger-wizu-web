@@ -5,6 +5,7 @@ import { RedBar } from "../components/StyledComponents";
 import { makeStyles } from "@material-ui/core/styles";
 import PrivateRoute from "../components/utils/PrivateRoute";
 import ProfileScreen from "../screens/ProfileScreen";
+import NotificationsScreen from "../screens/NotificationsScreen";
 import Lightbox from "react-image-lightbox";
 
 const Home = () => <div>Home</div>;
@@ -24,7 +25,6 @@ const useStyles = makeStyles({
 });
 export default () => {
   const classes = useStyles();
-
   return (
     <div>
       <RedBar style={{ display: "flex" }}>
@@ -68,7 +68,7 @@ export default () => {
           <Switch>
             <PrivateRoute
               path={`/home/notifications`}
-              component={Notifications}
+              component={NotificationsScreen}
             />
             <PrivateRoute path={`/home/profile`} component={ProfileScreen} />>
             <PrivateRoute path={`/home/events`} component={Events} />>

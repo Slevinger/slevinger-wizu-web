@@ -92,7 +92,7 @@ export class UserStore extends AutoBinder {
         return _id === friendId._id || friendId;
       });
 
-      if (user.username) {
+      if (user && user.username) {
         return user;
       }
       user = await this.apiStore.callApi(getUserDetailsApi(_id));
@@ -100,6 +100,7 @@ export class UserStore extends AutoBinder {
       this.authStore.user.friends = this.authStore.user.friends.map(friendId =>
         friendId === _id ? user : friendId
       );
+      return user;
     } catch (error) {
       console.log(error);
     }

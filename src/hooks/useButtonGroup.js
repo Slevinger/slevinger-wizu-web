@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Icon, Button } from "react-native-elements";
+import { Button, Icon } from "@material-ui/core";
 
 const useButtonGroup = _selectedIndex => {
   const [selectedIndex, setSelectedIndex] = useState(_selectedIndex);
@@ -9,29 +9,29 @@ const useButtonGroup = _selectedIndex => {
       {
         selectedColor = "blue",
         backgroundColor = "white",
-        onPress,
+        onClick,
         index,
-        icon: { name: iconName, type: iconType },
+        // icon: { name: iconName, type: iconType },
         ...props
       },
       ref
     ) => {
+      const variant =
+        selectedIndex === index
+          ? { variant: "contained", color: "primary" }
+          : {};
       return (
         <Button
           ref={ref}
           {...props}
-          onPress={() => {
+          onClick={() => {
             setSelectedIndex(index);
-            onPress && onPress(index);
+            onClick && onClick(index);
           }}
-          buttonStyle={{
-            backgroundColor:
-              selectedIndex == index ? selectedColor : backgroundColor,
-            borderRadius: 25
-          }}
-          icon={
-            <GroupButtonIcon index={index} name={iconName} type={iconType} />
-          }
+          {...variant}
+          //icon={
+          //  <GroupButtonIcon index={index} name={iconName} type={iconType} />
+          // }
         >
           {props.children}
         </Button>

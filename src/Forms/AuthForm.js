@@ -96,7 +96,6 @@ const AuthForm = ({ login, signup }) => {
           id="outlined-basic"
           name="username"
           label="Username"
-          value="slevinger"
           variant="outlined"
         />
         <TextField
@@ -104,7 +103,6 @@ const AuthForm = ({ login, signup }) => {
           type="password"
           name="password"
           id="outlined-basic"
-          value="123456"
           label="Password"
           variant="outlined"
         />

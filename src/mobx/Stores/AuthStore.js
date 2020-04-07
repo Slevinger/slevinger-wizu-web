@@ -89,13 +89,14 @@ export class AuthStore extends AutoBinder {
     } else {
       await this.fetchUser();
       if (this.user) {
-        this.navigationStore.push("/home/profile");
+        this.navigationStore.push("/home/notifications");
       }
     }
   }
 
   async fetchUser() {
     const user = await this.apiStore.callApi(silentLogin());
+
     this.user = user;
   }
 

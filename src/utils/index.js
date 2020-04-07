@@ -1,7 +1,6 @@
 export const buildFileSelector = handleFileSelected => {
   const fileSelector = document.createElement("input");
   fileSelector.setAttribute("type", "file");
-  debugger;
   fileSelector.onchange = e => {
     handleFileSelected(e.target.files[0]);
   };
