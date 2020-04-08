@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { TextField as MaterialTextField } from "@material-ui/core";
 import { Button } from "@material-ui/core";
+import { device } from "../const/Styles";
 
 const SplitScreen = styled.div`
   flex: 1;

@@ -5,7 +5,7 @@ import Lightbox from "react-image-lightbox";
 import EmptyImage from "../assets/empty-image.png";
 import styled from "styled-components";
 import EditImageButton from "./EditImageButton";
-
+import { device } from "../const/Styles";
 import "react-image-lightbox/style.css";
 
 const TopImageContainer = styled.div`
@@ -15,9 +15,14 @@ const TopImageContainer = styled.div`
   align-items: center;
 `;
 const TopImage = styled.img`
+  @media ${device.tablet} {
+    height: 200px;
+  }
+  @media ${device.laptop} {
+    height: 400px;
+  }
   object-fit: cover;
   width: 100%;
-  height: 400px;
   background-color: #f7f7f7;
   &:hover {
     cursor: pointer;

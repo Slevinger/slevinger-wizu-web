@@ -89,7 +89,7 @@ export class AuthStore extends AutoBinder {
     } else {
       await this.fetchUser();
       if (this.user) {
-        this.navigationStore.push("/home/notifications");
+        this.navigationStore.push("/home/profile");
       }
     }
   }

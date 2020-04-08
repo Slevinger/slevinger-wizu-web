@@ -1,11 +1,11 @@
 import React from "react";
 import { StyledIconButton } from "../components/StyledComponents";
+import { Camera } from "../Icons";
 import { buildFileSelector } from "../utils";
-import * as fontAwsomeIcons from "react-icons/fa";
-const { FaCamera } = fontAwsomeIcons;
+
 export default ({ fileSelected, left, bottom }) => {
   const selector = buildFileSelector(fileSelected);
-
+  debugger;
   return (
     <StyledIconButton
       style={{ position: "absolute", left, bottom }}
@@ -13,7 +13,7 @@ export default ({ fileSelected, left, bottom }) => {
         selector.click();
       }}
     >
-      <FaCamera size={32} />
+      <Camera />
     </StyledIconButton>
   );
 };

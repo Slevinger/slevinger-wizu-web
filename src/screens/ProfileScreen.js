@@ -9,7 +9,7 @@ import { LogoutButton } from "../components/StyledComponents";
 import FriendsComponent from "../components/FriendsCompoent";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
-
+import { device } from "../const/Styles";
 import "react-image-lightbox/style.css";
 
 const formatPhoneNumber = phoneNumberString => {
@@ -20,6 +20,18 @@ const formatPhoneNumber = phoneNumberString => {
   }
   return null;
 };
+
+const AttributeValue = styled.div`
+  @media ${device.tablet} {
+    font-size: 22px;
+  }
+  @media ${device.laptop} {
+    font-size: 42px;
+  }
+
+  font-weight: bolder;
+`;
+
 const parsers = {
   phoneNumber: formatPhoneNumber,
   date: dateString => moment(dateString).format("dd, MMM, YYYY"),
@@ -39,28 +51,40 @@ const Attribute = ({ label, value, type, style }) => {
       }}
     >
       <text style={{ marginRight: "15px", color: "gray" }}>{`${label}:`}</text>
-      <text style={{ fontSize: 42, fontWeight: "bolder" }}>
-        {getByPattern(value, type)}
-      </text>
+      <AttributeValue>{getByPattern(value, type)}</AttributeValue>
     </div>
   );
 };
 
 const ProfileImageContainer = styled.div`
-  width: 260px;
-  height: 260px;
+  @media ${device.tablet} {
+    width: 150px;
+    height: 150px;
+    margin-top: -75px;
+  }
+  @media ${device.laptop} {
+    width: 260px;
+    height: 260px;
+    margin-top: -130px;
+  }
   overflow: hidden;
   position: absolute;
   align-self: center;
   border-radius: 50%;
-  margin-top: -130px;
+
   &:hover {
     cursor: pointer;
   }
 `;
 const ProfileImage = styled.img`
-  width: 260px;
-  height: 260px;
+  @media ${device.tablet} {
+    width: 150px;
+    height: 150px;
+  }
+  @media ${device.laptop} {
+    width: 260px;
+    height: 260px;
+  }
   &:hover {
     cursor: pointer;
   }
@@ -144,7 +168,6 @@ export default mobxConnect(
     const location = useLocation();
     const match = location.search.match(/\?user_id=([^&]+)&?/);
 
-    debugger;
     return {
       getUserDetails,
       user,

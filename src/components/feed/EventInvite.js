@@ -1,8 +1,8 @@
 import React from "react";
 
 import { NavLink } from "react-router-dom";
-import { ListImage } from "../StyledComponents";
 import { Spacer } from "../StyledComponents";
+import { PostImage } from "./StyledFeedComponents";
 
 import { mobxConnect } from "../../mobx/mobxConnect";
 import { distanceFromTodayText } from "../../utils/timeDescriptor";
@@ -13,7 +13,7 @@ import * as Colors from "../../const/Colors";
 const EventInvite = ({ otherUser, event, setCurrentEvent }) => {
   const { name, _id, date, image_url } = event;
   return (
-    <div style={{ flexDirection: "row" }}>
+    <div style={{ display: "flex", flexDirection: "row" }}>
       <div
         style={{
           alignItems: "flex-start",
@@ -32,8 +32,7 @@ const EventInvite = ({ otherUser, event, setCurrentEvent }) => {
           {capitalize(distanceFromTodayText(moment(date)))}
         </text>
       </div>
-      <ListImage src={image_url} />
-      <Spacer size={3} />
+      <PostImage src={event.image_url + "?alt=media"} />
     </div>
   );
 };

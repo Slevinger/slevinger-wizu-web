@@ -5,7 +5,7 @@ import styled from "styled-components";
 const FriendsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10;
+  padding: 25px;
   flex-wrap: wrap;
   height: 200px;
 `;
@@ -13,12 +13,16 @@ const FriendsContainer = styled.div`
 const FriendListItem = () => {};
 
 export default ({ listOfFriends = [], style = {} }) => {
-
   const [currentIndex, setCurrentIndex] = useState(0);
+  debugger;
+
   return (
     <FriendsContainer style={{ style }}>
       {listOfFriends.slice(currentIndex, 20).map(friend => (
-        <Avatar src={friend.profileImage} />
+        <Avatar
+          style={{ width: 100, height: 100 }}
+          src={friend.profileImage && friend.profileImage + "?alt=media"}
+        />
       ))}
     </FriendsContainer>
   );

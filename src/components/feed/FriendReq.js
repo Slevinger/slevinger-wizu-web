@@ -6,8 +6,7 @@ import { Horizontal } from "../../components/StyledComponents";
 import capitalize from "lodash/capitalize";
 import { NavLink } from "react-router-dom";
 import { Spacer } from "../StyledComponents";
-import { Button } from "@material-ui/core";
-import { ButtonGroupContainer, PostImage } from "./StyledFeedComponents";
+import { PostImage, PostContent } from "./StyledFeedComponents";
 
 export default ({
   otherUser,
@@ -28,15 +27,7 @@ export default ({
       <div style={{ flexDirection: "row", display: "flex" }}>
         <PostImage src={otherUser.profileImage + "?alt=media"} />
         <Spacer />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            flexDirection: "column",
-            flex: 1,
-            fontSize: "28px"
-          }}
-        >
+        <PostContent>
           {otherUser._id.toString() !== trigger_user_id ? (
             <Horizontal>
               <text>{`You have sent a Friend Request to `}</text>
@@ -88,7 +79,7 @@ export default ({
               </GroupButton>
             </div>
           </div>
-        </div>
+        </PostContent>
       </div>
     </div>
   );
