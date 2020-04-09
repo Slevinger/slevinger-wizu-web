@@ -6,12 +6,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import PrivateRoute from "../components/utils/PrivateRoute";
 import ProfileScreen from "../screens/ProfileScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
-import Lightbox from "react-image-lightbox";
+import EventsSwitch from "./EventsSwitch";
 
 const Home = () => <div>Home</div>;
-const Profile = () => <div>Profile</div>;
-const Events = () => <div>Events</div>;
-const Notifications = () => <div>Notifications</div>;
 
 const useStyles = makeStyles({
   root: {
@@ -71,7 +68,7 @@ export default () => {
               component={NotificationsScreen}
             />
             <PrivateRoute path={`/home/profile`} component={ProfileScreen} />>
-            <PrivateRoute path={`/home/events`} component={Events} />>
+            <PrivateRoute path={`/home/events`} component={EventsSwitch} />>
             <PrivateRoute path={`/home`} component={Home} />
           </Switch>
         </div>
